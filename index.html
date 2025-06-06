@@ -44,7 +44,7 @@
                   const jitter = Math.random() * 0.002 - 0.001;
                   L.marker([lat + jitter, lng + jitter])
                     .addTo(map)
-                    .bindPopup(`<strong>${name}</strong><br>${message || "No message submitted"}`);
+                    .bindPopup(`<strong>${name}</strong><br>${message || "-"}`);
                 }
               });
             }
