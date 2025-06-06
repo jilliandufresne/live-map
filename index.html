@@ -21,20 +21,30 @@
     fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=1188768015&single=true&output=csv")
       .then(response => response.text())
       .then(csv => {
-        const rows = csv.split("\n").slice(1);
-        rows.forEach(row => {
-          const cols = row.split(",");
-          const name = cols[1];
-          const message = cols[3];
-          const lat = parseFloat(cols[6]);
-          const lng = parseFloat(cols[7]);
-          if (!isNaN(lat) && !isNaN(lng)) {
-            L.marker([lat, lng])
-              .addTo(map)
-              .bindPopup(`<strong>${name}</strong><br>${message}`);
-          }
-        });
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=1188768015&single=true&output=csv")
+    .then(response => response.text())
+    .then(csvText => {
+      Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          results.data.forEach(row => {
+            const name = row["Name(s)"];
+            const message = row["Message to the family (optional)"];
+            const lat = parseFloat(row["Latitiude"]);
+            const lng = parseFloat(row["Longitude"]);
+            if (!isNaN(lat) && !isNaN(lng)) {
+              L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(`<strong>${name}</strong><br>${message}`);
+            }
+          });
+        }
       });
-  </script>
+    });
+</script>
+
 </body>
 </html>
