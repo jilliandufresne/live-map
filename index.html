@@ -65,7 +65,8 @@
                 const message = row[messageKey] || "–";
                 const locationText = row[locationKey] || "–";
 
-                if (!isNaN(lat) && !isNaN(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+                // ✅ Relaxed filter — allows all valid numbers
+                if (!isNaN(lat) && !isNaN(lng)) {
                   const latJitter = (Math.random() - 0.5) * 0.01;
                   const lngJitter = (Math.random() - 0.5) * 0.01;
 
