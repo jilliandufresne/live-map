@@ -35,7 +35,8 @@
   <script>
     window.onload = function () {
       const map = L.map('map', {
-        worldCopyJump: true,
+        continuousWorld: true,
+        maxBoundsViscosity: 0.0,
         maxBounds: [[-85, -180], [85, 180]]
       }).setView([47.5, -120], 7);
 
@@ -66,7 +67,7 @@
                 const locationText = row[locationKey] || "–";
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                  const latJitter = (Math.random() - 0.5) * 0.01; // Wider spread
+                  const latJitter = (Math.random() - 0.5) * 0.01;
                   const lngJitter = (Math.random() - 0.5) * 0.01;
 
                   L.marker([lat + latJitter, lng + lngJitter])
