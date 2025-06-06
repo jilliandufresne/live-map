@@ -39,9 +39,8 @@
                 const name = row["Name"];
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
-                const locationText = row["Location you're supporting from"] || "–";
-
-                // Find the public message column dynamically
+                const locationText = row["Location you're supporting from"];
+                
                 const messageKey = Object.keys(row).find(k => k.includes("PUBLIC Message"));
                 const message = row[messageKey] || "–";
 
