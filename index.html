@@ -4,10 +4,9 @@
   <title>Live Support Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
   <style>
     #map { height: 100vh; width: 100vw; }
     #responseCount {
@@ -66,8 +65,7 @@
                 const message = row[messageKey] || "–";
                 const locationText = row[locationKey] || "–";
 
-                // Only add pin if location is valid (not near the South Pole)
-                if (!isNaN(lat) && !isNaN(lng) && lat > -60 && lat !== 0 && lng !== 0) {
+                if (!isNaN(lat) && !isNaN(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
                   const latJitter = (Math.random() - 0.5) * 0.01;
                   const lngJitter = (Math.random() - 0.5) * 0.01;
 
