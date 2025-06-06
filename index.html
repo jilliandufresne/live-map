@@ -17,7 +17,11 @@
 
   <script>
     window.onload = function () {
-      const map = L.map('map').setView([47.5, -120], 7);
+      const map = L.map('map', {
+        worldCopyJump: true,
+        maxBounds: [[-85, -180], [85, 180]]
+      }).setView([47.5, -120], 7);
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
@@ -35,16 +39,17 @@
                 const name = row["Name"];
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
+                const locationText = row["Location you're supporting from"] || "–";
 
-                // Find the message key dynamically (header may have newlines or extra text)
+                // Find the public message column dynamically
                 const messageKey = Object.keys(row).find(k => k.includes("PUBLIC Message"));
-                const message = row[messageKey];
+                const message = row[messageKey] || "–";
 
                 if (!isNaN(lat) && !isNaN(lng)) {
                   const jitter = Math.random() * 0.002 - 0.001;
                   L.marker([lat + jitter, lng + jitter])
                     .addTo(map)
-                    .bindPopup(`<strong>${name}</strong><br>${message || "-"}`);
+                    .bindPopup(`<strong>${name}</strong><br><em>${locationText}</em><br>${message}`);
                 }
               });
             }
