@@ -44,7 +44,7 @@
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=2063440228&single=true&output=csv" + new Date().getTime();
+      const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=2063440228&single=true&output=csv&t=" + new Date().getTime();
 
       fetch(csvUrl)
         .then(response => response.text())
@@ -66,7 +66,8 @@
                 const message = row[messageKey] || "–";
                 const locationText = row[locationKey] || "–";
 
-                if (!isNaN(lat) && !isNaN(lng)) {
+                // Only add pin if location is valid (not near the South Pole)
+                if (!isNaN(lat) && !isNaN(lng) && lat > -60 && lat !== 0 && lng !== 0) {
                   const latJitter = (Math.random() - 0.5) * 0.01;
                   const lngJitter = (Math.random() - 0.5) * 0.01;
 
