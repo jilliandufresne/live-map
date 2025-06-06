@@ -4,16 +4,36 @@
   <title>Live Support Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet core CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
   <style>
     #map { height: 100vh; width: 100vw; }
+    #responseCount {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: sans-serif;
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
+
+  <div id="responseCount">Loading responses...</div>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
   <script>
     window.onload = function () {
@@ -35,12 +55,15 @@
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
+              document.getElementById("responseCount").textContent = `Total Responses: ${results.data.length}`;
+
+              const markers = L.markerClusterGroup();
+
               results.data.forEach(row => {
                 const name = row["Name"];
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
 
-                // Find the correct keys dynamically
                 const messageKey = Object.keys(row).find(k => k.toLowerCase().includes("public message"));
                 const locationKey = Object.keys(row).find(k => k.toLowerCase().includes("location"));
 
@@ -48,12 +71,14 @@
                 const locationText = row[locationKey] || "–";
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                  const jitter = Math.random() * 0.002 - 0.001;
-                  L.marker([lat + jitter, lng + jitter])
-                    .addTo(map)
-                    .bindPopup(`<strong>${name}</strong><br><em>${locationText}</em><br>${message}`);
+                  const marker = L.marker([lat, lng]).bindPopup(
+                    `<strong>${name}</strong><br><em>${locationText}</em><br>${message}`
+                  );
+                  markers.addLayer(marker);
                 }
               });
+
+              map.addLayer(markers);
             }
           });
         });
@@ -61,3 +86,4 @@
   </script>
 </body>
 </html>
+
