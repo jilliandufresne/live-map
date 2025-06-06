@@ -12,11 +12,9 @@
 <body>
   <div id="map"></div>
 
-  <!-- Load required libraries -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-  <!-- Live Map Script -->
   <script>
     window.onload = function () {
       const map = L.map('map').setView([47.5, -120], 7);
@@ -24,7 +22,9 @@
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=1188768015&single=true&output=csv&cachebust=" + new Date().getTime())
+      const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgn5KV7N_nEawIX92woj-PLFdXFkMyoOcsn2pmnlmLmiCewhOtsJc2ez09AVPrNw4hxerDqvH67-Mg/pub?gid=1188768015&single=true&output=csv&cachebust=" + new Date().getTime();
+
+      fetch(csvUrl)
         .then(response => response.text())
         .then(csvText => {
           Papa.parse(csvText, {
@@ -33,12 +33,15 @@
             complete: function(results) {
               results.data.forEach(row => {
                 const name = row["Name"];
-                const message = row["PUBLIC Message (optional)"];
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
 
+                // Find the message key dynamically (header may have newlines or extra text)
+                const messageKey = Object.keys(row).find(k => k.includes("PUBLIC Message"));
+                const message = row[messageKey];
+
                 if (!isNaN(lat) && !isNaN(lng)) {
-                  const jitter = Math.random() * 0.002 - 0.001; // ±0.001 degrees (~100m)
+                  const jitter = Math.random() * 0.002 - 0.001;
                   L.marker([lat + jitter, lng + jitter])
                     .addTo(map)
                     .bindPopup(`<strong>${name}</strong><br>${message || "No message submitted"}`);
