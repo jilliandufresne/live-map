@@ -37,10 +37,13 @@
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
 
-                if (!isNaN(lat) && !isNaN(lng)) {
-                  L.marker([lat, lng])
-                    .addTo(map)
-                    .bindPopup(`<strong>${name}</strong><br>${message || "No message submitted"}`);
+               if (!isNaN(lat) && !isNaN(lng)) {
+  const jitter = Math.random() * 0.002 - 0.001; // ±0.001 degrees (~100m)
+  L.marker([lat + jitter, lng + jitter])
+    .addTo(map)
+    .bindPopup(`<strong>${name}</strong><br>${message || "No message submitted"}`);
+}
+e}</strong><br>${message || "No message submitted"}`);
                 }
               });
             }
