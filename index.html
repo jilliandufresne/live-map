@@ -39,10 +39,13 @@
                 const name = row["Name"];
                 const lat = parseFloat(row["Latitude"]);
                 const lng = parseFloat(row["Longitude"]);
-                const locationText = row["Location you're supporting from"];
-                
-                const messageKey = Object.keys(row).find(k => k.includes("PUBLIC Message"));
+
+                // Find the correct keys dynamically
+                const messageKey = Object.keys(row).find(k => k.toLowerCase().includes("public message"));
+                const locationKey = Object.keys(row).find(k => k.toLowerCase().includes("location"));
+
                 const message = row[messageKey] || "–";
+                const locationText = row[locationKey] || "–";
 
                 if (!isNaN(lat) && !isNaN(lng)) {
                   const jitter = Math.random() * 0.002 - 0.001;
