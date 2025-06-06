@@ -13,9 +13,9 @@
         skipEmptyLines: true,
         complete: function(results) {
           results.data.forEach(row => {
-            const name = row["Name(s)"];
-            const message = row[`PUBLIC Message to the family \r(optional, it will be shown next to your name/pin on the map that can be viewed by anyone)`];
-            const lat = parseFloat(row["Latitiude"]);
+            const name = row["Name"];
+            const message = row["Public Message"];
+            const lat = parseFloat(row["Latitude"]);
             const lng = parseFloat(row["Longitude"]);
 
             if (!isNaN(lat) && !isNaN(lng)) {
