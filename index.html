@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Live Map</title>
+  <title>Live Support Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -29,7 +29,8 @@
           const lat = parseFloat(cols[6]);
           const lng = parseFloat(cols[7]);
           if (!isNaN(lat) && !isNaN(lng)) {
-            L.marker([lat, lng]).addTo(map)
+            L.marker([lat, lng])
+              .addTo(map)
               .bindPopup(`<strong>${name}</strong><br>${message}`);
           }
         });
